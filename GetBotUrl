@@ -1,6 +1,6 @@
 $dnslist = Get-Content ./dnslist.txt
-
 $Results = foreach ($villain in $dnslist)
+
 {
     Resolve-DNSName -type A -Name $villain -DnsOnly -QuickTimeout -ErrorAction SilentlyContinue 
 }
