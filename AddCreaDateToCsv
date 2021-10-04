@@ -1,0 +1,15 @@
+# Own csv-version with one column and DateTime - surprisingly it works
+# Only drawback is the position of the new column, but it could be resolved by Select
+
+$files = Get-ChildItem ".\" -filter "*.csv"
+
+for ($i=0; $i -lt $files.Count; $i++) {
+    $date = (Get-Childitem $files[$i]).CreationTime 
+    $csv = Import-Csv $files[$i].FullName 
+    $newcsv = @()
+    foreach ( $row in $csv ) {
+        $row | Add-Member -MemberType NoteProperty -Name 'DateTime' -Value $date
+        $newcsv += $row
+    }
+    $newcsv | Export-Csv $files[$i].FullName -NoTypeInformation -Delimiter ';'
+}
