@@ -1,0 +1,8 @@
+$fileList = Get-ChildItem .\*.txt
+$newExtension = ".txtx"
+foreach ($file in $fileList)
+{
+    $date3 = (Get-Childitem $file).CreationTime
+    Get-Content -Path $file | ForEach-Object {"$date3 $_"} |
+        Out-File -FilePath $($file.BaseName + $newExtension) -Encoding ascii
+}
