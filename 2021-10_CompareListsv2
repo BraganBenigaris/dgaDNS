@@ -1,0 +1,25 @@
+$Path = "C:\DnsBarring\dataDump"
+$NewList  = Import-Csv -Path "$($path)\dgaB20211202.csv" -Delimiter ';'
+$BarrList = Import-Csv -Path "$($path)\2021-12_Sperren.csv" -Delimiter ';'
+
+# Compare two lists and put the data in a new one - matching entries will get "AlreadyKnown", not matching will keep the IP entry.
+
+
+$urlOutput = @()
+
+    ForEach ($url in $NewList)
+    {
+
+        $urlMatch = $BarrList | where {$_.Name -eq $url.Name}
+        If($urlMatch)
+        {
+            # Process the data
+
+            $urlOutput += New-Object PsObject -Property @{Name =$url.Name;IPAddress ="AlreadyKnown"}
+        }
+        else
+        {
+        $urlOutput += New-Object PsObject -Property @{Name =$url.Name;IPAddress =$url.IPAddress}
+        }
+    }
+$urlOutput | ft

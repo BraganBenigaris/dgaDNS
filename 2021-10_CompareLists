@@ -1,0 +1,25 @@
+$Path = "C:\DnsBarring"
+$NewList  = Import-Csv -Path "$($path)\dgaB20211018.csv" -Delimiter ';'
+$BarrList = Import-Csv -Path "$($path)\2021-10_Sperren.csv" -Delimiter ';'
+
+# Compare two lists and put the data in a new one - matching entries will keep the IP, not matching will get entry "New"
+
+
+$urlOutput = @()
+
+    ForEach ($url in $NewList)
+    {
+
+        $urlMatch = $BarrList | where {$_.Name -eq $url.Name}
+        If($urlMatch)
+        {
+            # Process the data
+
+            $urlOutput += New-Object PsObject -Property @{Name =$url.Name;IPAddress =$urlMatch.IPAddress}
+        }
+        else
+        {
+        $urlOutput += New-Object PsObject -Property @{Name =$url.Name;IPAddress ="New"}
+        }
+    }
+$urlOutput | ft
